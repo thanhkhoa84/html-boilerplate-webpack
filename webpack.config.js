@@ -1,6 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isDevMode = process.env.NODE_ENV !== 'production';
+const mode = isDevMode ? 'development' : 'production';
 
 const createHtml = function () {
   const pugs = fs
@@ -13,14 +17,19 @@ const createHtml = function () {
     });
   });
 };
+
 module.exports = {
   target: 'web',
   devtool: 'source-map',
+  mode,
+  resolve: {
+    extensions: ['*', '.pug', '.js', '.jsx', '.json'],
+  },
   entry: {
     app: path.resolve(__dirname, './src/assets/js/index.js'),
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './public'),
     publicPath: '/',
     filename: 'assets/js/[name].js',
     clean: true,
@@ -47,16 +56,26 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
       },
+      {
+        test: /\.(scss|sass|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+          'import-glob-loader',
+        ],
+      },
     ],
   },
   plugins: [
     ...createHtml(),
-    new HtmlWebpackPlugin({
-      template: 'src/views/index.pug',
+    new MiniCssExtractPlugin({
+      filename: 'assets/css/[name].css',
     }),
   ],
   devServer: {
     contentBase: './public',
+    port: 8000,
     hot: true,
   },
 };
