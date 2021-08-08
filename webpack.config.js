@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -68,6 +69,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new WebpackBar({
+      color: 'orange',
+    }),
     ...createHtml(),
     new MiniCssExtractPlugin({
       filename: 'assets/css/[name].css',
