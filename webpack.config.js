@@ -3,6 +3,7 @@ const fs = require('fs');
 const glob = require('glob');
 const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BeautifyHtmlWebpackPlugin = require('beautify-html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -96,6 +97,7 @@ let plugins = [
     color: 'orange',
   }),
   ...createHtml(),
+  new BeautifyHtmlWebpackPlugin(),
 ];
 if (!isDevMode) {
   plugins = [
