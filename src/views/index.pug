@@ -1,5 +1,7 @@
 extend ./layout/default.pug
 
 block content 
-  h1 Hello World
-  div(data-module="ExampleModule")
+  h1 Demo module
+  div(data-module="Incrementer")
+    div(data-target) 0
+    button(data-trigger) Add 1
