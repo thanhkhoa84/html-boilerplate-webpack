@@ -5,10 +5,9 @@ const WebpackBar = require('webpackbar');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BeautifyHtmlWebpackPlugin = require('beautify-html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const PurgeCssPlugin = require('purgecss-webpack-plugin');
+const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 const isDevMode = process.env.NODE_ENV === 'development';
 const mode = isDevMode ? 'development' : 'production';
@@ -33,7 +32,7 @@ const pug = {
 };
 const js = {
   test: /\.js$/,
-  loader: 'babel-loader',
+  loader: 'esbuild-loader',
 };
 const scss = {
   test: /\.(scss|sass|css)$/,
@@ -126,16 +125,10 @@ const optimization = isDevMode
       },
       minimize: true,
       minimizer: [
-        new TerserPlugin({
-          parallel: true,
-          terserOptions: {
-            format: {
-              comments: false,
-            },
-          },
-          extractComments: false,
+        new ESBuildMinifyPlugin({
+          target: 'es2015',
+          css: true
         }),
-        new CssMinimizerPlugin(),
         new PurgeCssPlugin({
           paths: glob.sync(`${path.resolve(__dirname, 'src')}/**/*`, {
             nodir: true,
@@ -194,7 +187,7 @@ module.exports = {
   plugins,
   optimization,
   devServer: {
-    contentBase: './public',
+    static: './public',
     port: 8000,
     hot: true,
   },
