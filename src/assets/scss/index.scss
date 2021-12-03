@@ -1,2 +1,23 @@
-@import "./_global/**/*.scss";
-@import "./atoms/**/*";
+@charset "UTF-8";
+
+// 1. Configuration and helpers
+@import 'abstracts/**/*.scss';
+
+// 2. Vendors
+// @import 'vendors/**/*.scss';
+
+// 3. Base
+@import 'base/**/*.scss';
+
+// 4. Layout-related sections
+@import 'layout/**/*.scss';
+
+// 5. Components
+@import 'components/**/*.scss';
+
+// 6. Page-specific styles
+@import 'pages/**/*.scss';
+
+// 7. Themes
+@import 'themes/**/*.scss';
+
