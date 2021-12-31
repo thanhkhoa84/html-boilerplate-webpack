@@ -118,63 +118,66 @@ if (!isDevMode) {
 
 // OPTIMIZATION
 const optimization = isDevMode
-  ? {}
-  : {
-      splitChunks: {
-        maxInitialRequests: Infinity,
-        chunks: 'all',
-        minSize: 20000,
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendor',
-            chunks: 'all',
-          },
-        },
-      },
-      minimize: true,
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'es2015',
-          css: true
-        }),
-        new PurgeCssPlugin({
-          paths: glob.sync(`${path.resolve(__dirname, 'src')}/**/*`, {
-            nodir: true,
-          }),
-          only: ['app'],
-          whitelistPatterns: [/css-pattern-to-remove.*/],
-        }),
-        new ImageMinimizerPlugin({
-          minimizerOptions: {
-            // Lossless optimization with custom option
-            // Feel free to experiment with options for better result for you
-            plugins: [
-              ['gifsicle', { interlaced: true }],
-              ['mozjpeg', { progressive: true, quality: 65 }],
-              [
-                'pngquant',
-                {
-                  strip: true,
-                  speed: 1,
-                  quality: [0.3, 0.5],
-                },
-              ],
-              [
-                'svgo',
-                {
-                  plugins: [
-                    {
-                      removeViewBox: false,
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
-        }),
-      ],
-    };
+	? {}
+	: {
+			splitChunks: {
+				maxInitialRequests: Infinity,
+				chunks: "all",
+				minSize: 20000,
+				cacheGroups: {
+					vendor: {
+						test: /[\\/]node_modules[\\/]/,
+						name: "vendor",
+						chunks: "all",
+					},
+				},
+			},
+			minimize: true,
+			minimizer: [
+				new ESBuildMinifyPlugin({
+					target: "es2015",
+					css: true,
+				}),
+				new PurgeCssPlugin({
+					paths: glob.sync(`${path.resolve(__dirname, "src")}/**/*`, {
+						nodir: true,
+					}),
+					only: ["app"],
+					whitelistPatterns: [/css-pattern-to-remove.*/],
+				}),
+				new ImageMinimizerPlugin({
+					minimizer: {
+						implementation: ImageMinimizerPlugin.imageminMinify,
+						options: {
+							// Lossless optimization with custom option
+							// Feel free to experiment with options for better result for you
+							plugins: [
+								["gifsicle", { interlaced: true }],
+								["mozjpeg", { progressive: true, quality: 65 }],
+								[
+									"pngquant",
+									{
+										strip: true,
+										speed: 1,
+										quality: [0.3, 0.5],
+									},
+								],
+								[
+									"svgo",
+									{
+										plugins: [
+											{
+												removeViewBox: false,
+											},
+										],
+									},
+								],
+							],
+						},
+					},
+				}),
+			],
+	  };
 
 module.exports = {
   target: 'web',
