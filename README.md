@@ -3,6 +3,9 @@ HTML development for legacy frontend developers
 
 ## Usage
 ``` javascript
+// install dependencies
+yarn install 
+
 //for starting developemnt
 yarn dev
 
