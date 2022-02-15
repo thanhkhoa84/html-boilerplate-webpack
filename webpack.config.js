@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 const PurgeCssPlugin = require("purgecss-webpack-plugin");
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 
 const isDevMode = process.env.NODE_ENV === "development";
 const mode = isDevMode ? "development" : "production";
@@ -101,19 +102,38 @@ const createHtml = function () {
 };
 
 let plugins = [
-  new WebpackBar({
-    color: 'orange',
-  }),
-  ...createHtml(),
-  new BeautifyHtmlWebpackPlugin(),
+	new WebpackBar({
+		color: "orange",
+	}),
+	...createHtml(),
+	new BrowserSyncPlugin(
+		// BrowserSync options
+		{
+			// browse to http://localhost:3000/ during development
+			host: "localhost",
+			port: 3000,
+			// proxy the Webpack Dev Server endpoint
+			// (which should be serving on http://localhost:3100/)
+			// through BrowserSync
+			proxy: "http://localhost:8000/",
+		},
+		// plugin options
+		{
+			// prevent BrowserSync from reloading the page
+			// and let Webpack Dev Server take care of this
+			reload: false,
+		}
+	),
+	new BeautifyHtmlWebpackPlugin(),
 ];
+
 if (!isDevMode) {
-  plugins = [
-    ...plugins,
-    new MiniCssExtractPlugin({
-      filename: './assets/css/[name].css',
-    }),
-  ];
+	plugins = [
+		...plugins,
+		new MiniCssExtractPlugin({
+			filename: "./assets/css/[name].css",
+		}),
+	];
 }
 
 // OPTIMIZATION
