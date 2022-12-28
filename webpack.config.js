@@ -8,7 +8,8 @@ const BeautifyHtmlWebpackPlugin = require("beautify-html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 const { LightningCssMinifyPlugin } = require("lightningcss-loader");
-const PurgeCssPlugin = require("purgecss-webpack-plugin");
+const LightningCSS = require("lightningcss");
+const { PurgeCSSPlugin } = require("purgecss-webpack-plugin");
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 
@@ -134,7 +135,9 @@ if (!isDevMode) {
 		new MiniCssExtractPlugin({
 			filename: "./assets/css/[name].css",
 		}),
-		new LightningCssMinifyPlugin(),
+		new LightningCssMinifyPlugin({
+			implementation: LightningCSS,
+		}),
 	];
 }
 
@@ -160,7 +163,7 @@ const optimization = isDevMode
 					target: "es2015",
 					css: true,
 				}),
-				new PurgeCssPlugin({
+				new PurgeCSSPlugin({
 					paths: glob.sync(`${path.resolve(__dirname, "src")}/**/*`, {
 						nodir: true,
 					}),
